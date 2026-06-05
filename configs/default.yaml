@@ -1,0 +1,47 @@
+# Edge Arabic TTS — FastSpeech2-small
+dataset:
+  name: "AhmedAshrafMarzouk/saudi-podcast-1hr"
+  train_split: 0.9
+  seed: 42
+
+audio:
+  sample_rate: 22050
+  n_fft: 1024
+  hop_length: 256
+  win_length: 1024
+  n_mels: 80
+  fmin: 0
+  fmax: 8000
+  trim_top_db: 30
+  min_duration: 1.0
+  max_duration: 65.0
+
+model:
+  d_model: 256
+  n_heads: 4
+  encoder_layers: 4
+  decoder_layers: 4
+  ffn_dim: 1024
+  kernel_size: 3
+  dropout: 0.1
+  use_postnet: true
+  max_seq_len: 512
+
+train:
+  batch_size: 16
+  num_workers: 4
+  lr: 0.001
+  weight_decay: 0.0001
+  max_steps: 120000
+  grad_clip: 1.0
+  log_every: 100
+  save_every: 5000
+  val_every: 1000
+
+synthesis:
+  griffin_lim_iters: 60
+
+paths:
+  root: "."
+  checkpoint: "checkpoints/best.pt"
+  vocab: "data/vocab.json"

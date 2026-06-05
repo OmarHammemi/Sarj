@@ -1,0 +1,7 @@
+{
+  "clips": 69,
+  "train": 62,
+  "val": 7,
+  "hours": 0.997,
+  "vocab_size": 58
+}
