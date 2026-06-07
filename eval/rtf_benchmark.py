@@ -4,17 +4,20 @@ from __future__ import annotations
 
 import argparse
 import statistics
+import sys
 import time
 from pathlib import Path
 
 import torch
 import yaml
 
-from data.audio_utils import mel_to_wav
-from synthesize import load_model
-from data.text_normalize import load_vocab, text_to_ids
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from data.audio_utils import mel_to_wav
+from data.text_normalize import load_vocab, text_to_ids
+from synthesize import load_model
 DEFAULT_TEXT = "السَّلامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ"
 
 
@@ -74,7 +77,7 @@ def benchmark(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Benchmark RTF")
-    parser.add_argument("--checkpoint", default=str(ROOT / "checkpoints" / "best.pt"))
+    parser.add_argument("--checkpoint", default=str(ROOT / "checkpoints" / "latest.pt"))
     parser.add_argument("--config", default=str(ROOT / "configs" / "default.yaml"))
     parser.add_argument("--device", default="cpu", choices=["cuda", "cpu"])
     parser.add_argument("--text", default=DEFAULT_TEXT)

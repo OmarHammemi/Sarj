@@ -98,7 +98,8 @@ train.py          Training loop
 synthesize.py     Text → WAV (librosa Griffin-Lim)
 synthesize_v2.py  Mel clamp + stronger Griffin-Lim
 eval/             RTF benchmark
-samples/          Generated audio for submission
+data/Samples/     Submission WAV files (5 sentences + ablation)
+samples/          prompts.txt
 checkpoints/      Model weights
 TECHNICAL_SUMMARY.md
 ```
@@ -119,7 +120,19 @@ Train without PostNet:
 python train.py --config configs/ablation_no_postnet.yaml --device cuda
 ```
 
-Compare outputs with the default model on the same sentences.
+Compare outputs with the default model on the same sentences:
+
+```bash
+python synthesize.py --text "..." --out data/Samples/ablation/with_postnet.wav \
+  --checkpoint checkpoints/latest.pt --config configs/optimized.yaml
+
+python synthesize.py --text "..." --out data/Samples/ablation/no_postnet.wav \
+  --checkpoint checkpoints/latest.pt --config configs/optimized.yaml --no-postnet
+```
+
+## Submission audio
+
+Five synthesized samples: **`data/Samples/`** (diacritized Arabic filenames). See `TECHNICAL_SUMMARY.md` and `samples/prompts.txt`.
 
 ## Kaggle / Colab workflow
 

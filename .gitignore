@@ -15,3 +15,6 @@ data/durations/
 checkpoints/
 *.wav
 !samples/.gitkeep
+!data/Samples/*.wav
+!data/Samples/ablation/*.wav
+data/model.pt
