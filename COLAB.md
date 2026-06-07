@@ -2,6 +2,8 @@
 
 Repo: **https://github.com/OmarHammemi/Sarj**
 
+For the full end-to-end workflow (download → train → 5 samples), use the Kaggle notebook: [`notebooks/sarj-1.ipynb`](notebooks/sarj-1.ipynb).
+
 ## 1. Open Colab
 
 1. Go to [https://colab.research.google.com](https://colab.research.google.com)
@@ -27,22 +29,24 @@ Run these cells in order:
 Processed data is **not** in GitHub (too large). Run on Colab:
 
 ```python
-!python data/download.py
+!python data/download_hesham.py --max-hours 1.0 --min-dur 2.0 --max-dur 12.0
 !python data/preprocess.py
 ```
 
-Expected: ~69 clips, ~1 hour.
+Expected: ~400–800 short clips, ~1 hour, diacritized text.
+
+**Note:** Input text at synthesis time must include tashkeel (diacritics), matching the training data.
 
 ## 4. Reduce batch size (avoid GPU OOM)
 
-Clips are ~50 seconds long. Use batch size 2 on T4:
+Short clips allow larger batches than the old podcast data. On T4, batch size 8 works well:
 
 ```python
 import yaml
 from pathlib import Path
 
 cfg = yaml.safe_load(open("configs/default.yaml"))
-cfg["train"]["batch_size"] = 2
+cfg["train"]["batch_size"] = 8
 cfg["train"]["num_workers"] = 2
 Path("configs/default.yaml").write_text(yaml.dump(cfg, sort_keys=False))
 print("batch_size =", cfg["train"]["batch_size"])
@@ -98,7 +102,7 @@ drive.mount('/content/drive')
 !python eval/rtf_benchmark.py --device cuda
 
 !python synthesize.py \
-  --text "السلام عليكم ورحمه الله وبركاته" \
+  --text "السَّلَامُ عَلَيْكُمْ" \
   --out samples/colab_test.wav \
   --device cuda
 

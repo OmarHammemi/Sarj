@@ -25,9 +25,9 @@
 
 ## 2. Data
 
-- **Dataset:** AhmedAshrafMarzouk/saudi-podcast-1hr (from [Saudi audio HF search](https://huggingface.co/datasets?modality=modality:audio&sort=trending&search=saudi))
-- **Speaker:** Single Saudi podcast speaker (~69 clips, ~1 hour)
-- **Duration:** ~1 hour (use `--max-hours 1.0` when slicing larger datasets)
+- **Dataset:** [HeshamHaroon/arabic-msa-25k-saudi-male-tashkeel](https://huggingface.co/datasets/HeshamHaroon/arabic-msa-25k-saudi-male-tashkeel) (from [Saudi audio HF search](https://huggingface.co/datasets?modality=modality:audio&sort=trending&search=saudi))
+- **Speaker:** Single male Saudi speaker, diacritized Modern Standard Arabic
+- **Duration:** ~1 hour subset (400–800 short clips, 2–12s each; use `--max-hours 1.0`)
 - **Split:** 90% train / 10% val
 - **Text:** Fully diacritized Arabic (tashkeel retained)
 - **Alignments:** Character-proportional duration bootstrap (no pretrained Arabic acoustic model)

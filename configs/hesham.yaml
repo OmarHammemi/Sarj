@@ -1,4 +1,4 @@
-# Edge Arabic TTS — FastSpeech2-small
+# HeshamHaroon dataset — short clips, diacritized MSA (matches Kaggle notebook)
 dataset:
   name: "HeshamHaroon/arabic-msa-25k-saudi-male-tashkeel"
   train_split: 0.9
@@ -32,16 +32,16 @@ train:
   num_workers: 0
   lr: 0.0003
   weight_decay: 0.0001
-  max_steps: 120000
+  max_steps: 19000
   grad_clip: 1.0
-  log_every: 100
-  save_every: 5000
-  val_every: 1000
+  log_every: 200
+  save_every: 2000
+  val_every: 2000
 
 synthesis:
   griffin_lim_iters: 60
 
 paths:
   root: "."
-  checkpoint: "checkpoints/best.pt"
+  checkpoint: "checkpoints/latest.pt"
   vocab: "data/vocab.json"

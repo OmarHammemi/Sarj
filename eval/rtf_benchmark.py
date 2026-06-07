@@ -10,7 +10,8 @@ from pathlib import Path
 import torch
 import yaml
 
-from synthesize import griffin_lim, load_model
+from data.audio_utils import mel_to_wav
+from synthesize import load_model
 from data.text_normalize import load_vocab, text_to_ids
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,7 +44,7 @@ def benchmark(
         t0 = time.perf_counter()
         with torch.no_grad():
             mel = model.infer(tokens, lengths).cpu().numpy()
-        wav = griffin_lim(mel, ckpt_cfg, n_iters)
+        wav = mel_to_wav(mel, ckpt_cfg, n_iters)
         if device.type == "cuda":
             torch.cuda.synchronize()
         elapsed = time.perf_counter() - t0

@@ -1,5 +1,5 @@
 dataset:
-  name: "AhmedAshrafMarzouk/saudi-podcast-1hr"
+  name: "HeshamHaroon/arabic-msa-25k-saudi-male-tashkeel"
   train_split: 0.9
   seed: 42
 
@@ -12,8 +12,8 @@ audio:
   fmin: 0
   fmax: 8000
   trim_top_db: 30
-  min_duration: 1.0
-  max_duration: 65.0
+  min_duration: 1.5
+  max_duration: 15.0
 
 model:
   d_model: 256

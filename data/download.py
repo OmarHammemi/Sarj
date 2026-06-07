@@ -22,7 +22,8 @@ RECOMMENDED_DATASETS = {
     "arabic-tts-saudi": "AhmedAshrafMarzouk/arabic-tts-saudi-audio-dataset",
 }
 
-DEFAULT_DATASET = RECOMMENDED_DATASETS["saudi-podcast-1hr"]
+DEFAULT_DATASET = RECOMMENDED_DATASETS["hesham-saudi-male-tashkeel"]
+HESHAM_DATASET = RECOMMENDED_DATASETS["hesham-saudi-male-tashkeel"]
 
 
 def find_text(item: dict) -> str | None:
@@ -194,9 +195,22 @@ def main() -> None:
     )
     parser.add_argument("--split", default="train")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--min-dur", type=float, default=2.0, help="Min clip seconds (Hesham dataset)")
+    parser.add_argument("--max-dur", type=float, default=12.0, help="Max clip seconds (Hesham dataset)")
     args = parser.parse_args()
     max_hours = None if args.max_hours <= 0 else args.max_hours
-    download(args.dataset, Path(args.output), max_hours=max_hours, split=args.split, seed=args.seed)
+
+    if args.dataset == HESHAM_DATASET:
+        from data.download_hesham import download_filtered
+
+        download_filtered(
+            Path(args.output),
+            max_hours=max_hours if max_hours is not None else 1.0,
+            min_dur=args.min_dur,
+            max_dur=args.max_dur,
+        )
+    else:
+        download(args.dataset, Path(args.output), max_hours=max_hours, split=args.split, seed=args.seed)
 
 
 if __name__ == "__main__":
