@@ -32,10 +32,12 @@
 
 ## 3. Training
 
+- **Phase 1:** `configs/hesham.yaml` — 19k steps planned, lr 3e-4, batch 8 (Kaggle T4)
+- **Synthesis config:** `configs/optimized.yaml` — Griffin-Lim 128 iterations, mel clamp via `synthesize_v2.py`
 - Sample rate: 22050 Hz, 80-dim log-mel (librosa, matched between train and synthesis)
 - Losses: L1 mel + PostNet L1 + log-duration MSE
-- Optimizer: AdamW, lr=3e-4 (initial) → 1e-4 (fine-tune), batch 8→4
-- Checkpoint: step **10,000**, val loss **2.51**, vocab size **50**
+- Optimizer: AdamW, weight decay 1e-4
+- **Submitted checkpoint:** `checkpoints/latest.pt` — step **10,000**, best val loss **2.51**, vocab size **50**, **5,700,673** params
 - **Overfitting:** Expected with ~1h data; goal is a working pipeline, not generalization
 
 ## 4. RTF (Real-Time Factor)
@@ -45,7 +47,7 @@ RTF = inference_time / audio_duration (lower is faster; RTF < 1 = faster than re
 | Device | Avg inference (s) | Audio duration (s) | RTF |
 |--------|-------------------|--------------------|-----|
 | GPU (T4, Kaggle) | 0.8053 | 1.9969 | 0.4033 |
-| CPU (Azure VM) | 0.6124 | 1.9621 | 0.3121 |
+| CPU (Azure VM) | 0.6156 | 1.9621 | 0.3137 |
 
 **Measurement protocol:** batch size 1, 3 warmup runs, average of 5 runs, includes mel model + Griffin-Lim (128 iterations).
 
@@ -57,8 +59,10 @@ RTF = inference_time / audio_duration (lower is faster; RTF < 1 = faster than re
 
 **What changed:**
 
-- **With PostNet:** smoother, more stable output; lower RMS noise floor (0.159)
-- **Without PostNet:** harsher, more buzzy timbre; higher RMS (0.196) indicating extra unmodeled energy after Griffin-Lim
+- **With PostNet:** smoother, more stable output; lower RMS noise floor (**0.160**)
+- **Without PostNet:** harsher, more buzzy timbre; higher RMS (**0.213**) indicating extra unmodeled energy after Griffin-Lim
+
+Both generated from `checkpoints/latest.pt` with `configs/optimized.yaml`, test sentence: `السَّلَامُ عَلَيْكُمْ`.
 
 **Interpretation:** PostNet adds a residual refinement pass over the decoder mel before vocoding. Without it, the mel lacks fine harmonic detail and Griffin-Lim amplifies artifacts. Speech remains partially intelligible but noticeably rougher — PostNet is the main quality refinement stage in this small-data, vocoder-free pipeline.
 
@@ -74,4 +78,14 @@ Ablation audio: `data/Samples/ablation/with_postnet.wav` vs `data/Samples/ablati
 
 ## 7. Sample sentences
 
-Five submission WAV files are in `data/Samples/`. Prompts listed in `samples/prompts.txt`.
+Five submission WAV files in `data/Samples/` (from `samples/prompts.txt`):
+
+| File | Arabic text |
+|------|-------------|
+| `01_salam.wav` | السَّلَامُ عَلَيْكُمْ |
+| `02_how.wav` | كَيْفَ حَالُكَ الْيَوْمَ |
+| `03_arabic.wav` | أُحِبُّ تَعَلُّمَ اللُّغَةِ الْعَرَبِيَّةِ |
+| `04_thanks.wav` | شُكْرًا جَزِيلًا لَكُمْ |
+| `05_tech.wav` | تُسَاعِدُ أَدَواتُ تَطْوِيرِ البرمَجَاتِ فِي تَسْهِيلِ العَمَلِ |
+
+Synthesized with `checkpoints/latest.pt`, `configs/optimized.yaml`, `synthesize_v2.py` (CPU).

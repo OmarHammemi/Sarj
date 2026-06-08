@@ -132,7 +132,17 @@ python synthesize.py --text "..." --out data/Samples/ablation/no_postnet.wav \
 
 ## Submission audio
 
-Five synthesized samples: **`data/Samples/`** (diacritized Arabic filenames). See `TECHNICAL_SUMMARY.md` and `samples/prompts.txt`.
+Five synthesized samples in **`data/Samples/`**:
+
+```text
+01_salam.wav  02_how.wav  03_arabic.wav  04_thanks.wav  05_tech.wav
+```
+
+Ablation pair: **`data/Samples/ablation/`** (`with_postnet.wav`, `no_postnet.wav`).
+
+Full write-up: **`TECHNICAL_SUMMARY.md`**. Prompts: **`samples/prompts.txt`**.
+
+**Checkpoint:** `checkpoints/latest.pt` is not in Git (size). Share separately or reproduce via Kaggle notebook [`notebooks/sarj-1.ipynb`](notebooks/sarj-1.ipynb).
 
 ## Kaggle / Colab workflow
 
